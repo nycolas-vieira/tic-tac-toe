@@ -1,0 +1,133 @@
+<html>
+    <head>
+        <meta charset="UTF-8"/>
+        <title>TIC-TAC-TOE</title>
+    </head>
+    <body>
+        <section>
+            <div style="text-align: center; margin: auto">
+                <h1>PLACAR</h1>
+
+                <h3 id="score"></h3>
+            </div>
+
+            <table id="gameTable" style="text-align: center; margin: auto"></table>
+        </section>
+    </body>
+</html>
+
+<script>
+    lastCell = null;
+    played = [];
+
+    window.addEventListener("load", function() {
+        var table = document.createElement("table"),
+            row = table.insertRow();
+
+        for(i = 0; i < 3; i++){
+            for(j = 0; j < 3; j++){
+                var cell = row.insertCell();
+                cell.innerHTML = "<button style='border: 5px solid black; width: 200px; height: 200px;' onclick='submit(this)' data-id="+i+":"+j+"></button>";
+            }
+
+            row = table.insertRow();
+        }
+
+        document.getElementById("gameTable").append(table);
+
+        var scoreX = localStorage.getItem("scoreX") == null ? "X: 0" : localStorage.getItem("scoreX");
+        var scoreO = localStorage.getItem("scoreO") == null ? "O: 0" : localStorage.getItem("scoreO");
+
+        document.getElementById("score").innerText = scoreX + " / " + scoreO; 
+    });
+
+    function submit(cell){
+        if(cell.innerHTML.includes("h1")){
+            return;
+        }
+
+        var index = cell.getAttribute("data-id");
+
+        if (lastCell == null) {
+            cell.innerHTML = "<h1 style='font-size:50px'>X</h1>";
+            index += ":X";
+        } else if(lastCell.innerHTML.includes("X")){
+            cell.innerHTML = "<h1 style='font-size:50px'>O</h1>";
+            index += ":O";
+        } else {
+            cell.innerHTML = "<h1 style='font-size:50px'>X</h1>";
+            index += ":X";
+        }
+
+        played.push(index);
+
+        var victory = false;
+        if ((played.includes("0:0:X") && played.includes("0:1:X") && played.includes("0:2:X"))
+            || (played.includes("0:0:O") && played.includes("0:1:O") && played.includes("0:2:O"))){
+
+            alert("Victory!!!"); victory = true;
+
+        } else if ((played.includes("1:0:X") && played.includes("1:1:X") && played.includes("1:2:X"))
+            || (played.includes("1:0:O") && played.includes("1:1:O") && played.includes("1:2:O"))){
+
+            alert("Victory!!!"); victory = true;
+
+        } else if ((played.includes("2:0:X") && played.includes("2:1:X") && played.includes("2:2:X"))
+            || (played.includes("2:0:O") && played.includes("2:1:O") && played.includes("2:2:O"))){
+                
+            alert("Victory!!!"); victory = true;
+
+        } else if ((played.includes("0:0:X") && played.includes("1:0:X") && played.includes("2:0:X"))
+            || (played.includes("0:0:O") && played.includes("1:0:O") && played.includes("2:0:O"))){
+
+            alert("Victory!!!"); victory = true;
+
+        } else if ((played.includes("0:1:X") && played.includes("1:1:X") && played.includes("2:1:X"))
+            || (played.includes("0:1:O") && played.includes("1:1:O") && played.includes("2:1:O"))){
+
+            alert("Victory!!!"); victory = true;
+
+        } else if ((played.includes("0:2:X") && played.includes("1:2:X") && played.includes("2:2:X"))
+            || (played.includes("0:2:O") && played.includes("1:2:O") && played.includes("2:2:O"))){
+
+            alert("Victory!!!"); victory = true;
+
+        } else if ((played.includes("0:0:X") && played.includes("1:1:X") && played.includes("2:2:X"))
+            || (played.includes("0:0:O") && played.includes("1:1:O") && played.includes("2:2:O"))){
+
+            alert("Victory!!!"); victory = true;
+
+        } else if ((played.includes("0:2:X") && played.includes("1:1:X") && played.includes("2:0:X"))
+            || (played.includes("0:2:O") && played.includes("1:1:O") && played.includes("2:0:O"))){
+
+            alert("Victory!!!"); victory = true;
+
+        } else if(played.length == 9) {
+
+            alert("Old woman!!!"); 
+            location.reload();
+            return;
+
+        }
+
+        if (victory && played[played.length-1].split(":")[2] == 'X') {
+            localStorage.setItem("scoreX", 
+                localStorage.getItem("scoreX") == null 
+                ? played[played.length-1].split(":")[2] + ": 1" 
+                : played[played.length-1].split(":")[2] + ": " + (+localStorage.getItem("scoreX").split(" ")[1]+1));
+            
+            location.reload();
+            return;
+        } else if (victory && played[played.length-1].split(":")[2] == 'O') {
+            localStorage.setItem("scoreO",
+                localStorage.getItem("scoreO") == null 
+                ? played[played.length-1].split(":")[2] + ": 1" 
+                : played[played.length-1].split(":")[2] + ": " + (+localStorage.getItem("scoreO").split(" ")[1]+1));
+            
+            location.reload();
+            return;
+        }
+
+        lastCell = cell; 
+    }
+</script>
